@@ -1,0 +1,361 @@
+
+:root {
+  --slate: #2c2c2b;
+  --slate-deep: #202120;
+  --chalk: #f3efe3;
+  --chalk-soft: #d7cfbd;
+  --sage: #aab29a;
+  --sage-light: #c6ccb9;
+  --wood-dark: #4f2f1f;
+  --wood-mid: #765036;
+  --wood-light: #a77b55;
+  --gold: #c3a76e;
+  --shadow: rgba(0,0,0,.42);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #111;
+}
+
+body {
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  color: var(--chalk);
+}
+
+.frame {
+  width: 100vw;
+  height: 100vh;
+  padding: clamp(10px, 1.1vw, 22px);
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.05), transparent 8%, transparent 92%, rgba(0,0,0,.18)),
+    repeating-linear-gradient(
+      92deg,
+      var(--wood-dark) 0 18px,
+      var(--wood-mid) 19px 31px,
+      #65432d 32px 47px,
+      var(--wood-light) 48px 54px
+    );
+  box-shadow: inset 0 0 55px rgba(0,0,0,.7);
+}
+
+.board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: clamp(20px, 2vw, 38px) clamp(25px, 2.6vw, 52px) clamp(18px, 1.7vw, 34px);
+  border: 2px solid rgba(245,237,218,.22);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.035), transparent 26%),
+    radial-gradient(circle at 82% 70%, rgba(255,255,255,.02), transparent 30%),
+    linear-gradient(140deg, var(--slate), var(--slate-deep));
+  box-shadow:
+    inset 0 0 70px rgba(0,0,0,.48),
+    inset 0 0 0 10px rgba(255,255,255,.012),
+    0 12px 40px var(--shadow);
+}
+
+/* Very faint chalk dust texture. */
+.board::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  background-image:
+    radial-gradient(rgba(255,255,255,.1) .55px, transparent .65px);
+  background-size: 7px 7px;
+  mix-blend-mode: screen;
+}
+
+.rings {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: .15;
+  filter: blur(.15px);
+  background:
+    repeating-radial-gradient(
+      ellipse at center,
+      transparent 0 31px,
+      rgba(211,191,151,.62) 32px 34px,
+      transparent 35px 67px
+    );
+}
+
+.rings-a {
+  width: 1500px;
+  height: 1180px;
+  left: -950px;
+  top: -280px;
+  transform: rotate(-12deg) scaleX(1.18);
+}
+
+.rings-b {
+  width: 1300px;
+  height: 1000px;
+  right: -850px;
+  bottom: -560px;
+  transform: rotate(18deg) scaleX(1.15);
+  opacity: .09;
+}
+
+.topbar {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 30px;
+  margin-bottom: clamp(14px, 1.4vw, 26px);
+}
+
+.brand-block { min-width: 0; }
+
+.hand {
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1px rgba(255,255,255,.22));
+}
+
+.brand {
+  width: clamp(230px, 27vw, 490px);
+  max-height: 112px;
+  object-position: left center;
+}
+
+.ring-line {
+  width: min(440px, 88%);
+  height: 16px;
+  margin: -2px 0 0 8px;
+  border-top: 2px solid rgba(200,175,125,.72);
+  border-radius: 50%;
+  transform: rotate(-1.2deg);
+}
+
+.greeting-block {
+  min-width: 320px;
+  text-align: right;
+}
+
+.greeting {
+  width: clamp(260px, 25vw, 450px);
+  max-height: 90px;
+  margin-left: auto;
+  object-position: right center;
+}
+
+.date {
+  margin-top: 4px;
+  color: var(--chalk-soft);
+  font-family: Georgia, serif;
+  font-size: clamp(19px, 1.55vw, 30px);
+  letter-spacing: .04em;
+}
+
+.grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.12fr .93fr .88fr;
+  grid-template-rows: 1.08fr .92fr;
+  grid-template-areas:
+    "dinner schedule scripture"
+    "focus word reminder";
+  gap: clamp(14px, 1.35vw, 25px);
+  height: calc(100% - 180px);
+  padding-bottom: 34px;
+}
+
+.panel {
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(15px, 1.35vw, 25px);
+  border: 1px solid rgba(243,239,227,.19);
+  border-radius: 19px;
+  background: rgba(255,255,255,.027);
+  box-shadow: inset 0 0 26px rgba(255,255,255,.02);
+  overflow: hidden;
+}
+
+.dinner-panel { grid-area: dinner; }
+.schedule-panel { grid-area: schedule; }
+.focus-panel { grid-area: focus; }
+.scripture-panel { grid-area: scripture; }
+.word-panel { grid-area: word; }
+.reminder-panel { grid-area: reminder; }
+
+.memory-panel {
+  display: none;
+  grid-area: reminder;
+}
+
+.heading {
+  width: clamp(125px, 11vw, 220px);
+  max-height: 58px;
+  margin-bottom: 10px;
+  object-position: left center;
+}
+
+.heading.wide {
+  width: clamp(190px, 17vw, 330px);
+}
+
+.hero-text {
+  margin-top: 8px;
+  max-width: 100%;
+  font-family: Georgia, serif;
+  font-size: clamp(34px, 3.5vw, 68px);
+  line-height: 1.02;
+  color: #fff8e7;
+  overflow-wrap: anywhere;
+}
+
+.subtle {
+  margin-top: 17px;
+  color: var(--chalk-soft);
+  font-size: clamp(16px, 1.25vw, 24px);
+}
+
+.list {
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: Georgia, serif;
+  font-size: clamp(20px, 1.65vw, 31px);
+  line-height: 1.42;
+}
+
+.list li {
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+
+.schedule-panel .list li::before {
+  content: "•";
+  color: var(--sage-light);
+  margin-right: 12px;
+}
+
+.checklist li::before {
+  content: "□";
+  color: var(--sage-light);
+  margin-right: 12px;
+}
+
+.section-title, .typed-label {
+  color: var(--sage-light);
+  font-family: Georgia, serif;
+  font-size: clamp(18px, 1.35vw, 25px);
+  letter-spacing: .035em;
+}
+
+blockquote {
+  margin: 12px 0 0;
+  font-family: Georgia, serif;
+  font-size: clamp(19px, 1.45vw, 28px);
+  line-height: 1.34;
+  color: var(--chalk);
+}
+
+.word-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.year {
+  margin-top: 5px;
+  color: var(--chalk-soft);
+  font-size: clamp(18px, 1.3vw, 25px);
+}
+
+.word {
+  margin-top: 12px;
+  font-family: Georgia, serif;
+  font-size: clamp(42px, 4vw, 80px);
+  line-height: 1;
+  color: var(--sage-light);
+  text-transform: uppercase;
+  letter-spacing: .045em;
+  overflow-wrap: anywhere;
+}
+
+.reminder {
+  margin-top: 10px;
+  font-family: Georgia, serif;
+  font-size: clamp(24px, 2vw, 38px);
+  line-height: 1.25;
+  font-style: italic;
+  color: #fff8e7;
+}
+
+.empty-state {
+  margin-top: 15px;
+  font-family: Georgia, serif;
+  font-size: clamp(22px, 1.7vw, 32px);
+  line-height: 1.3;
+  color: var(--chalk-soft);
+  font-style: italic;
+}
+
+.hidden { display: none !important; }
+
+.memory-label { color: var(--sage-light); }
+.credit {
+  margin-top: 12px;
+  color: var(--chalk-soft);
+  text-align: right;
+  font-family: Georgia, serif;
+  font-size: clamp(16px, 1.2vw, 22px);
+}
+
+footer {
+  position: absolute;
+  z-index: 2;
+  left: clamp(26px, 2.6vw, 52px);
+  right: clamp(26px, 2.6vw, 52px);
+  bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: rgba(243,239,227,.53);
+  font-size: clamp(12px, .85vw, 16px);
+  letter-spacing: .05em;
+}
+
+.loading-error {
+  color: #f2d1c4 !important;
+}
+
+/* Echo Show 21 is landscape; this fallback keeps it readable elsewhere. */
+@media (max-width: 900px), (orientation: portrait) {
+  html, body { overflow: auto; }
+  .frame { height: auto; min-height: 100vh; }
+  .board { min-height: calc(100vh - 20px); }
+  .topbar { grid-template-columns: 1fr; }
+  .greeting-block { text-align: left; min-width: 0; }
+  .greeting { margin-left: 0; object-position: left center; }
+  .grid {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-template-areas:
+      "dinner"
+      "schedule"
+      "focus"
+      "scripture"
+      "word"
+      "reminder";
+    padding-bottom: 55px;
+  }
+}

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#292929">
+  <title>Daily Table — Ring 1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="frame">
+    <section class="board" aria-label="Daily Table family board">
+      <div class="rings rings-a" aria-hidden="true"></div>
+      <div class="rings rings-b" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <div class="brand-block">
+          <img class="hand brand" src="assets/daily_table.png" alt="Daily Table">
+          <div class="ring-line" aria-hidden="true"></div>
+        </div>
+
+        <div class="greeting-block">
+          <img id="greetingImage" class="hand greeting" src="assets/good_morning.png" alt="Good Morning">
+          <div id="dateText" class="date">Loading today…</div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="panel dinner-panel">
+          <img class="hand heading" src="assets/tonight.png" alt="Tonight">
+          <div id="dinnerText" class="hero-text">Loading dinner…</div>
+          <div id="tomorrowDinner" class="subtle"></div>
+        </article>
+
+        <article class="panel schedule-panel">
+          <img class="hand heading wide" src="assets/todays_schedule.png" alt="Today's Schedule">
+          <ul id="scheduleList" class="list"></ul>
+          <div id="scheduleEmpty" class="empty-state hidden">Enjoy the margin today.</div>
+        </article>
+
+        <article class="panel focus-panel">
+          <img class="hand heading wide" src="assets/todays_focus.png" alt="Today's Focus">
+          <ul id="focusList" class="list checklist"></ul>
+          <div id="focusEmpty" class="empty-state hidden">Move gently today.</div>
+        </article>
+
+        <article class="panel scripture-panel">
+          <img class="hand heading" src="assets/scripture.png" alt="Scripture">
+          <div id="scriptureReference" class="section-title">Scripture for today</div>
+          <blockquote id="scriptureText">Loading…</blockquote>
+        </article>
+
+        <article class="panel word-panel">
+          <div class="typed-label">Word of the Year</div>
+          <div id="wordYear" class="year"></div>
+          <div id="wordText" class="word">Establish</div>
+        </article>
+
+        <article class="panel reminder-panel">
+          <img class="hand heading wide" src="assets/gentle_reminder.png" alt="Gentle Reminder">
+          <div id="reminderText" class="reminder">Grace for this day.</div>
+        </article>
+
+        <article class="panel memory-panel">
+          <div class="typed-label memory-label">Kitchen Whiteboard</div>
+          <blockquote id="pratherismText">“A day is not wasted if a memory is made.”</blockquote>
+          <div id="pratherismCredit" class="credit">— Darin</div>
+        </article>
+      </section>
+
+      <footer>
+        <span>Nourish • Organize • Remember • Grow</span>
+        <span>Ring 1</span>
+      </footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
