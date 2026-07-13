@@ -3,68 +3,78 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#292929">
-  <title>Daily Table — Ring 1</title>
+  <meta name="theme-color" content="#242424">
+  <title>Daily Table</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="frame">
-    <section class="board" aria-label="Daily Table family board">
-      <div class="rings rings-a" aria-hidden="true"></div>
-      <div class="rings rings-b" aria-hidden="true"></div>
+  <main class="wood-frame">
+    <section class="board">
+      <div class="tree-rings ring-one" aria-hidden="true"></div>
+      <div class="tree-rings ring-two" aria-hidden="true"></div>
 
-      <header class="topbar">
-        <div class="brand-block">
+      <header class="header">
+        <div class="brand-wrap">
           <img class="hand brand" src="assets/daily_table.png" alt="Daily Table">
-          <div class="ring-line" aria-hidden="true"></div>
+          <div class="tree-line"></div>
         </div>
-
-        <div class="greeting-block">
+        <div class="welcome">
           <img id="greetingImage" class="hand greeting" src="assets/good_morning.png" alt="Good Morning">
           <div id="dateText" class="date">Loading today…</div>
         </div>
       </header>
 
-      <section class="grid">
-        <article class="panel dinner-panel">
+      <section class="layout">
+        <article class="card dinner">
           <img class="hand heading" src="assets/tonight.png" alt="Tonight">
-          <div id="dinnerText" class="hero-text">Loading dinner…</div>
-          <div id="tomorrowDinner" class="subtle"></div>
+          <div id="weekendLunchWrap" class="weekend-lunch hidden">
+            <span class="eyebrow">Lunch</span>
+            <div id="weekendLunch" class="lunch-text"></div>
+          </div>
+          <span class="eyebrow">Dinner</span>
+          <div id="dinnerText" class="dinner-text">Loading dinner…</div>
+          <div id="tomorrowDinner" class="tomorrow"></div>
         </article>
 
-        <article class="panel schedule-panel">
+        <article class="card schedule">
           <img class="hand heading wide" src="assets/todays_schedule.png" alt="Today's Schedule">
-          <ul id="scheduleList" class="list"></ul>
-          <div id="scheduleEmpty" class="empty-state hidden">Enjoy the margin today.</div>
+          <ul id="scheduleList" class="clean-list"></ul>
+          <p id="scheduleEmpty" class="blank-message hidden">Enjoy the margin today.</p>
         </article>
 
-        <article class="panel focus-panel">
+        <article class="card focus">
           <img class="hand heading wide" src="assets/todays_focus.png" alt="Today's Focus">
-          <ul id="focusList" class="list checklist"></ul>
-          <div id="focusEmpty" class="empty-state hidden">Move gently today.</div>
+          <ul id="focusList" class="clean-list checklist"></ul>
+          <p id="focusEmpty" class="blank-message hidden">Move gently today.</p>
         </article>
 
-        <article class="panel scripture-panel">
+        <article class="card scripture">
           <img class="hand heading" src="assets/scripture.png" alt="Scripture">
-          <div id="scriptureReference" class="section-title">Scripture for today</div>
+          <div id="scriptureReference" class="scripture-ref">Scripture for today</div>
           <blockquote id="scriptureText">Loading…</blockquote>
         </article>
 
-        <article class="panel word-panel">
-          <div class="typed-label">Word of the Year</div>
-          <div id="wordYear" class="year"></div>
-          <div id="wordText" class="word">Establish</div>
+        <article class="card word">
+          <div class="typed-heading">Word of the Year</div>
+          <div id="wordYear" class="word-year">2026</div>
+          <div id="wordText" class="word-text">Establish</div>
         </article>
 
-        <article class="panel reminder-panel">
+        <article id="reminderCard" class="card reminder">
           <img class="hand heading wide" src="assets/gentle_reminder.png" alt="Gentle Reminder">
-          <div id="reminderText" class="reminder">Grace for this day.</div>
+          <div id="reminderText" class="reminder-text">Grace for this day.</div>
         </article>
 
-        <article class="panel memory-panel">
-          <div class="typed-label memory-label">Kitchen Whiteboard</div>
-          <blockquote id="pratherismText">“A day is not wasted if a memory is made.”</blockquote>
-          <div id="pratherismCredit" class="credit">— Darin</div>
+        <article id="whiteboardCard" class="card whiteboard hidden">
+          <div class="typed-heading">Kitchen Whiteboard</div>
+          <blockquote id="pratherismText"></blockquote>
+          <div id="pratherismCredit" class="credit"></div>
+        </article>
+
+        <article id="sundayPrepCard" class="card sunday-prep hidden">
+          <div class="typed-heading">Sunday Lunch Prep</div>
+          <ul id="prepList" class="clean-list checklist"></ul>
+          <p id="prepEmpty" class="blank-message hidden">Future you will be glad you paused to prepare.</p>
         </article>
       </section>
 
@@ -74,7 +84,6 @@
       </footer>
     </section>
   </main>
-
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,79 +1,67 @@
-# Daily Table — Ring 1
+# Daily Table — Production Ring 1
 
-This folder is the complete first live version of Daily Table.
+## Upload these files to the root of the GitHub repository
 
-## What it reads from your Google Sheet
+- `index.html`
+- `style.css`
+- `script.js`
+- `assets/` and all images inside it
 
-Google Sheet ID:
-`1Qg6BIwSfSVAz1_fU0mQImpfZYeSu8WnBC7pbzG8ku44`
+You may also upload this README.
 
-Tabs used:
+## Replace the current files
 
-- `Dashboard`
-- `Weekly Menu`
-- `Pratherisms`
+In GitHub:
 
-The Google Sheet must remain:
-**Anyone with the link → Viewer**
+1. Open the `Daily-Table` repository.
+2. Choose **Add file → Upload files**.
+3. Drag in everything from this folder.
+4. GitHub will show matching filenames as replacements.
+5. Choose **Commit changes**.
+6. Wait about 1–3 minutes, then refresh:
+   `https://praycres.github.io/Daily-Table/`
 
-## One small Google Sheet update
+## Google Sheet fields used
 
-On the `Dashboard` tab, add these three labels in Column A:
+### Dashboard tab
+Column A label / Column B value:
 
+- Focus 1
+- Focus 2
+- Focus 3
 - Schedule 1
 - Schedule 2
 - Schedule 3
+- Scripture Reference
+- Scripture Text
+- Word of the Year
+- Year
+- Gentle Reminder
 
-Enter the corresponding schedule items in Column B.
+Optional Sunday prep fields:
 
-For example:
+- Lunch Prep 1
+- Lunch Prep 2
+- Lunch Prep 3
+- Lunch Prep 4
+- Lunch Prep 5
 
-| Column A | Column B |
-|---|---|
-| Schedule 1 | 9:00 Isaiah 117 House |
-| Schedule 2 | 3:30 Appointment |
-| Schedule 3 | 6:30 Small Group |
+### Weekly Menu tab
+Supported columns:
 
-If all three are blank, Daily Table will say:
+- Day
+- Lunch
+- Dinner
+- Prep Notes
 
-> Enjoy the margin today.
+Lunch appears on the board on Saturdays and Sundays.
+On Sundays, Prep Notes may appear in the Sunday Lunch Prep card.
 
-## Upload to GitHub
+### Pratherisms tab
+Supported columns:
 
-1. Open the `Praycres/Daily-Table` repository.
-2. Click **Add file** → **Upload files**.
-3. Upload:
-   - `index.html`
-   - `style.css`
-   - `script.js`
-   - the entire `assets` folder
-4. Click **Commit changes**.
+- Quote
+- Who Said It
+- Age
 
-## Turn on GitHub Pages
-
-1. In the repository, open **Settings**.
-2. Select **Pages**.
-3. Under **Build and deployment**, choose:
-   - Source: **Deploy from a branch**
-   - Branch: **main**
-   - Folder: **/(root)**
-4. Click **Save**.
-
-Your site should appear at:
-
-`https://praycres.github.io/Daily-Table/`
-
-GitHub Pages may take a few minutes to publish the first time.
-
-## What Ring 1 does
-
-- Reads meals from the Weekly Menu tab.
-- Reads Focus, Scripture, Word of the Year, Gentle Reminder, and Schedule from Dashboard.
-- Changes the greeting automatically by time of day.
-- Shows friendly text when Dinner, Focus, or Schedule are blank.
-- Shows one Kitchen Whiteboard Pratherism on Saturdays and Sundays.
-- Refreshes Google Sheet information every 10 minutes.
-
-## Ring 1.1
-
-Automatic Google Calendar syncing will be added after Ring 1 is live and tested on the Echo Show.
+On Saturdays and Sundays a Kitchen Whiteboard memory may replace the Gentle Reminder.

@@ -1,241 +1,169 @@
 
 const SHEET_ID = "1Qg6BIwSfSVAz1_fU0mQImpfZYeSu8WnBC7pbzG8ku44";
-const REFRESH_MINUTES = 10;
+const REFRESH_MS = 10 * 60 * 1000;
 
-const ASSETS = {
+const greetingAssets = {
   morning: "assets/good_morning.png",
   afternoon: "assets/good_afternoon.png",
   evening: "assets/good_evening.png"
 };
 
-function csvUrl(sheetName) {
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}&t=${Date.now()}`;
+function urlFor(sheet){
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}&cache=${Date.now()}`;
 }
-
-function parseCSV(text) {
-  const rows = [];
-  let row = [], field = "", quoted = false;
-
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    const next = text[i + 1];
-
-    if (quoted) {
-      if (ch === '"' && next === '"') {
-        field += '"';
-        i++;
-      } else if (ch === '"') {
-        quoted = false;
-      } else {
-        field += ch;
-      }
-    } else {
-      if (ch === '"') quoted = true;
-      else if (ch === ",") {
-        row.push(field);
-        field = "";
-      } else if (ch === "\n") {
-        row.push(field.replace(/\r$/, ""));
-        rows.push(row);
-        row = [];
-        field = "";
-      } else {
-        field += ch;
-      }
+function parseCSV(text){
+  const rows=[]; let row=[], field="", quoted=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i], n=text[i+1];
+    if(quoted){
+      if(c === '"' && n === '"'){ field+='"'; i++; }
+      else if(c === '"') quoted=false;
+      else field+=c;
+    }else{
+      if(c === '"') quoted=true;
+      else if(c === ","){ row.push(field); field=""; }
+      else if(c === "\n"){ row.push(field.replace(/\r$/,"")); rows.push(row); row=[]; field=""; }
+      else field+=c;
     }
   }
-  row.push(field.replace(/\r$/, ""));
-  if (row.some(cell => cell !== "")) rows.push(row);
+  row.push(field.replace(/\r$/,""));
+  if(row.some(v=>v!=="")) rows.push(row);
   return rows;
 }
-
-async function fetchSheet(name) {
-  const response = await fetch(csvUrl(name), { cache: "no-store" });
-  if (!response.ok) throw new Error(`Could not read ${name}`);
-  return parseCSV(await response.text());
+async function getSheet(name){
+  const res=await fetch(urlFor(name),{cache:"no-store"});
+  if(!res.ok) throw new Error(`Unable to read ${name}`);
+  return parseCSV(await res.text());
 }
+const tidy=v=>(v||"").trim();
+function setText(id,value){ const el=document.getElementById(id); if(el) el.textContent=value; }
 
-function rowsToKeyValue(rows) {
-  const result = {};
-  rows.forEach(row => {
-    const key = (row[0] || "").trim();
-    const value = (row[1] || "").trim();
-    if (key) result[key.toLowerCase()] = value;
+function kv(rows){
+  const out={};
+  rows.forEach(r=>{
+    const key=tidy(r[0]).toLowerCase();
+    if(key) out[key]=tidy(r[1]);
+  });
+  return out;
+}
+function greeting(){
+  const now=new Date(), hour=now.getHours(), img=document.getElementById("greetingImage");
+  if(hour<12){img.src=greetingAssets.morning;img.alt="Good Morning";}
+  else if(hour<17){img.src=greetingAssets.afternoon;img.alt="Good Afternoon";}
+  else{img.src=greetingAssets.evening;img.alt="Good Evening";}
+  setText("dateText",now.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"}));
+}
+function renderList(listId,emptyId,values){
+  const list=document.getElementById(listId), empty=document.getElementById(emptyId);
+  const good=values.map(tidy).filter(Boolean); list.innerHTML="";
+  if(!good.length){list.classList.add("hidden");empty.classList.remove("hidden");return;}
+  empty.classList.add("hidden");list.classList.remove("hidden");
+  good.forEach(v=>{const li=document.createElement("li");li.textContent=v;list.appendChild(li);});
+}
+function headerMap(row){
+  const map={}; row.forEach((h,i)=>map[tidy(h).toLowerCase()]=i); return map;
+}
+function menuData(rows){
+  // Supports either old columns: Day, Dinner, Recipe Link, Prep Notes
+  // or new columns: Day, Lunch, Dinner, Prep Notes.
+  const headerIndex=rows.findIndex(r=>r.some(v=>tidy(v).toLowerCase()==="day"));
+  if(headerIndex<0) return {};
+  const h=headerMap(rows[headerIndex]), result={};
+  rows.slice(headerIndex+1).forEach(r=>{
+    const day=tidy(r[h.day]).toLowerCase();
+    if(!day) return;
+    result[day]={
+      lunch:h.lunch!==undefined?tidy(r[h.lunch]):"",
+      dinner:h.dinner!==undefined?tidy(r[h.dinner]):"",
+      prep:h["prep notes"]!==undefined?tidy(r[h["prep notes"]]):""
+    };
   });
   return result;
 }
-
-function clean(value) {
-  return (value || "").trim();
+function dayName(offset=0){
+  const d=new Date(); d.setDate(d.getDate()+offset);
+  return d.toLocaleDateString("en-US",{weekday:"long"}).toLowerCase();
 }
-
-function setText(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
+function pratherisms(rows){
+  const headerIndex=rows.findIndex(r=>r.some(v=>tidy(v).toLowerCase()==="quote"));
+  if(headerIndex<0) return [];
+  const h=headerMap(rows[headerIndex]);
+  return rows.slice(headerIndex+1).map(r=>({
+    quote:tidy(r[h.quote]),
+    who:h["who said it"]!==undefined?tidy(r[h["who said it"]]):"",
+    age:h.age!==undefined?tidy(r[h.age]):""
+  })).filter(x=>x.quote);
 }
-
-function setGreetingAndDate() {
-  const now = new Date();
-  const hour = now.getHours();
-  const image = document.getElementById("greetingImage");
-
-  if (hour < 12) {
-    image.src = ASSETS.morning;
-    image.alt = "Good Morning";
-  } else if (hour < 17) {
-    image.src = ASSETS.afternoon;
-    image.alt = "Good Afternoon";
-  } else {
-    image.src = ASSETS.evening;
-    image.alt = "Good Evening";
-  }
-
-  setText("dateText", now.toLocaleDateString(undefined, {
-    weekday: "long",
-    month: "long",
-    day: "numeric"
-  }));
+function dailyIndex(length){
+  if(!length)return 0;
+  const d=new Date(); const key=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+  let hash=0; for(const c of key)hash=((hash<<5)-hash)+c.charCodeAt(0);
+  return Math.abs(hash)%length;
 }
-
-function renderList(listId, emptyId, items) {
-  const list = document.getElementById(listId);
-  const empty = document.getElementById(emptyId);
-  list.innerHTML = "";
-
-  const valid = items.map(clean).filter(Boolean);
-  if (!valid.length) {
-    list.classList.add("hidden");
-    empty.classList.remove("hidden");
-    return;
-  }
-
-  empty.classList.add("hidden");
-  list.classList.remove("hidden");
-  valid.forEach(value => {
-    const li = document.createElement("li");
-    li.textContent = value;
-    list.appendChild(li);
-  });
+function rotateMemory(items){
+  // Weekend tradition: Kitchen Whiteboard replaces Gentle Reminder.
+  const isWeekend=[0,6].includes(new Date().getDay());
+  if(!isWeekend || !items.length)return;
+  const item=items[dailyIndex(items.length)];
+  setText("pratherismText",`“${item.quote}”`);
+  const credit=[item.who,item.age?`age ${item.age}`:""].filter(Boolean).join(", ");
+  setText("pratherismCredit",credit?`— ${credit}`:"");
+  document.getElementById("reminderCard").classList.add("hidden");
+  document.getElementById("whiteboardCard").classList.remove("hidden");
 }
-
-function getTodayName() {
-  return new Date().toLocaleDateString("en-US", { weekday: "long" });
+function sundayPrep(data,menu){
+  if(new Date().getDay()!==0)return;
+  const raw=[
+    data["lunch prep 1"],data["lunch prep 2"],data["lunch prep 3"],
+    data["lunch prep 4"],data["lunch prep 5"],
+    menu.sunday?.prep
+  ].filter(Boolean);
+  if(!raw.length)return;
+  document.getElementById("reminderCard").classList.add("hidden");
+  document.getElementById("whiteboardCard").classList.add("hidden");
+  document.getElementById("sundayPrepCard").classList.remove("hidden");
+  renderList("prepList","prepEmpty",raw);
 }
-
-function getTomorrowName() {
-  const date = new Date();
-  date.setDate(date.getDate() + 1);
-  return date.toLocaleDateString("en-US", { weekday: "long" });
-}
-
-function getMenu(rows) {
-  const menu = {};
-  rows.forEach(row => {
-    const day = clean(row[0]);
-    const dinner = clean(row[1]);
-    if (day && dinner && day.toLowerCase() !== "day") {
-      menu[day.toLowerCase()] = dinner;
-    }
-  });
-  return menu;
-}
-
-function deterministicIndex(length) {
-  if (!length) return 0;
-  const now = new Date();
-  const key = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
-  let hash = 0;
-  for (const ch of key) hash = ((hash << 5) - hash) + ch.charCodeAt(0);
-  return Math.abs(hash) % length;
-}
-
-function getPratherisms(rows) {
-  return rows
-    .filter(row => clean(row[0]) && clean(row[0]).toLowerCase() !== "quote")
-    .map(row => ({
-      quote: clean(row[0]),
-      person: clean(row[1]),
-      age: clean(row[2])
-    }));
-}
-
-function maybeShowKitchenWhiteboard(pratherisms) {
-  // Show Kitchen Whiteboard on Saturdays and Sundays; Gentle Reminder on weekdays.
-  const weekend = [0, 6].includes(new Date().getDay());
-  if (!weekend || !pratherisms.length) return;
-
-  const choice = pratherisms[deterministicIndex(pratherisms.length)];
-  const reminderPanel = document.querySelector(".reminder-panel");
-  const memoryPanel = document.querySelector(".memory-panel");
-
-  setText("pratherismText", `“${choice.quote}”`);
-  const detail = [choice.person, choice.age ? `age ${choice.age}` : ""].filter(Boolean).join(", ");
-  setText("pratherismCredit", detail ? `— ${detail}` : "");
-
-  reminderPanel.style.display = "none";
-  memoryPanel.style.display = "block";
-}
-
-async function loadDashboard() {
-  setGreetingAndDate();
-
-  try {
-    const [dashboardRows, menuRows, pratherismRows] = await Promise.all([
-      fetchSheet("Dashboard"),
-      fetchSheet("Weekly Menu"),
-      fetchSheet("Pratherisms")
+async function load(){
+  greeting();
+  try{
+    const [dashboardRows,menuRows,quoteRows]=await Promise.all([
+      getSheet("Dashboard"),getSheet("Weekly Menu"),getSheet("Pratherisms")
     ]);
+    const data=kv(dashboardRows), menu=menuData(menuRows);
+    const today=dayName(0), tomorrow=dayName(1), todaysMenu=menu[today]||{}, nextMenu=menu[tomorrow]||{};
 
-    const data = rowsToKeyValue(dashboardRows);
-    const menu = getMenu(menuRows);
+    setText("dinnerText",todaysMenu.dinner||data["dinner tonight"]||"Maybe tonight is takeout.");
+    setText("tomorrowDinner",nextMenu.dinner?`Tomorrow: ${nextMenu.dinner}`:"");
 
-    const todayDinner =
-      menu[getTodayName().toLowerCase()] ||
-      clean(data["dinner tonight"]) ||
-      "Maybe tonight is takeout.";
+    const isWeekend=[0,6].includes(new Date().getDay());
+    const lunchWrap=document.getElementById("weekendLunchWrap");
+    if(isWeekend && todaysMenu.lunch){
+      setText("weekendLunch",todaysMenu.lunch); lunchWrap.classList.remove("hidden");
+    }else lunchWrap.classList.add("hidden");
 
-    const tomorrowDinner =
-      menu[getTomorrowName().toLowerCase()] ||
-      clean(data["tomorrow's dinner"]);
+    renderList("scheduleList","scheduleEmpty",[data["schedule 1"],data["schedule 2"],data["schedule 3"]]);
+    renderList("focusList","focusEmpty",[data["focus 1"],data["focus 2"],data["focus 3"]]);
 
-    setText("dinnerText", todayDinner);
-    setText(
-      "tomorrowDinner",
-      tomorrowDinner ? `Tomorrow: ${tomorrowDinner}` : ""
-    );
+    setText("scriptureReference",data["scripture reference"]||"Scripture for today");
+    setText("scriptureText",data["scripture text"]||"Grace for this day.");
+    setText("wordText",data["word of the year"]||"Establish");
+    setText("wordYear",data.year||String(new Date().getFullYear()));
+    setText("reminderText",data["gentle reminder"]||"Grace for this day.");
 
-    renderList("focusList", "focusEmpty", [
-      data["focus 1"],
-      data["focus 2"],
-      data["focus 3"]
-    ]);
-
-    // Add Schedule 1, Schedule 2, and Schedule 3 to the Dashboard tab.
-    renderList("scheduleList", "scheduleEmpty", [
-      data["schedule 1"],
-      data["schedule 2"],
-      data["schedule 3"]
-    ]);
-
-    setText("scriptureReference", clean(data["scripture reference"]) || "Scripture for today");
-    setText("scriptureText", clean(data["scripture text"]) || "Grace for this day.");
-
-    setText("wordText", clean(data["word of the year"]) || "Establish");
-    setText("wordYear", clean(data["year"]) || String(new Date().getFullYear()));
-
-    setText("reminderText", clean(data["gentle reminder"]) || "Grace for this day.");
-
-    maybeShowKitchenWhiteboard(getPratherisms(pratherismRows));
-  } catch (error) {
-    console.error(error);
-    setText("dinnerText", "Daily Table is resting.");
-    setText("tomorrowDinner", "Check the Google Sheet sharing settings.");
-    document.getElementById("dinnerText").classList.add("loading-error");
-    renderList("scheduleList", "scheduleEmpty", []);
-    renderList("focusList", "focusEmpty", []);
+    document.getElementById("reminderCard").classList.remove("hidden");
+    document.getElementById("whiteboardCard").classList.add("hidden");
+    document.getElementById("sundayPrepCard").classList.add("hidden");
+    rotateMemory(pratherisms(quoteRows));
+    sundayPrep(data,menu);
+  }catch(err){
+    console.error(err);
+    setText("dinnerText","Daily Table is resting.");
+    setText("tomorrowDinner","Please check the Google Sheet sharing settings.");
+    renderList("scheduleList","scheduleEmpty",[]);
+    renderList("focusList","focusEmpty",[]);
   }
 }
-
-loadDashboard();
-setInterval(loadDashboard, REFRESH_MINUTES * 60 * 1000);
-setInterval(setGreetingAndDate, 60 * 1000);
+load();
+setInterval(load,REFRESH_MS);
+setInterval(greeting,60*1000);
