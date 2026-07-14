@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#252724">
+  <title>Daily Table</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wood-frame">
+  <section class="board">
+    <div class="rings ring-a"></div>
+    <div class="rings ring-b"></div>
+
+    <header class="header">
+      <div class="brand-area">
+        <img class="hand brand" src="assets/daily_table.png" alt="Daily Table">
+        <div class="brand-line"><span></span></div>
+        <div class="tagline">Nourish • Organize • Remember • Grow</div>
+      </div>
+      <div class="greeting-area">
+        <img id="greetingImage" class="hand greeting" src="assets/good_morning.png" alt="Good Morning">
+        <div id="dateText" class="date"></div>
+        <div class="tree-line" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="content-grid">
+      <article class="section tonight">
+        <img class="hand section-heading" src="assets/tonight.png" alt="Tonight">
+        <div id="weekendLunchBlock" class="weekend-lunch hidden">
+          <div class="small-label">Lunch</div>
+          <div id="weekendLunch"></div>
+        </div>
+        <div id="dinnerText" class="dinner-main">Loading dinner…</div>
+        <div id="dinnerSides" class="dinner-sides"></div>
+        <div id="tomorrowDinner" class="tomorrow"></div>
+      </article>
+
+      <article class="section schedule">
+        <img class="hand section-heading wide" src="assets/schedule.png" alt="Today's Schedule">
+        <ul id="scheduleList" class="plain-list schedule-list"></ul>
+        <p id="scheduleEmpty" class="empty hidden">Enjoy the margin today.</p>
+      </article>
+
+      <article class="section focus">
+        <img class="hand section-heading wide" src="assets/focus.png" alt="Today's Focus">
+        <ul id="focusList" class="plain-list focus-list"></ul>
+        <p id="focusEmpty" class="empty hidden">Move gently today.</p>
+      </article>
+
+      <article class="section scripture">
+        <img class="hand section-heading" src="assets/scripture.png" alt="Scripture">
+        <div id="scriptureText" class="verse">Grace for this day.</div>
+        <div id="scriptureReference" class="reference"></div>
+      </article>
+
+      <article class="section word">
+        <div class="script-label">Word of the Year</div>
+        <div id="wordYear" class="word-year">2026</div>
+        <div id="wordText" class="word-main">ESTABLISH</div>
+      </article>
+
+      <article id="dynamicPanel" class="section dynamic">
+        <div id="reminderView">
+          <img class="hand section-heading wide" src="assets/gentle_reminder.png" alt="Gentle Reminder">
+          <div id="reminderText" class="reminder">Grace for this day.</div>
+        </div>
+        <div id="whiteboardView" class="hidden">
+          <div class="script-label">Kitchen Whiteboard</div>
+          <div class="whiteboard-note">
+            <div id="pratherismText" class="quote"></div>
+            <div id="pratherismCredit" class="credit"></div>
+          </div>
+        </div>
+        <div id="prepView" class="hidden">
+          <div class="script-label">Sunday Lunch Prep</div>
+          <ul id="prepList" class="plain-list focus-list"></ul>
+          <p id="prepEmpty" class="empty hidden">Future you will be glad you paused to prepare.</p>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <span>One day. One meal. One conversation. One ring at a time.</span>
+      <span>Ring 1</span>
+    </footer>
+  </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
