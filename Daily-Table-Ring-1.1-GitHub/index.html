@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#202a25">
+  <title>Daily Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="frame">
+    <section class="chalkboard" aria-label="Daily Table family board">
+      <div class="chalk-haze haze-one"></div>
+      <div class="chalk-haze haze-two"></div>
+      <img class="tree-rings" src="assets/tree-rings.svg" alt="">
+
+      <header class="masthead">
+        <div class="brand-block">
+          <h1>Daily Table</h1>
+          <div class="brand-underline" aria-hidden="true"></div>
+          <p id="greeting">Good Evening</p>
+        </div>
+        <div class="date-block">
+          <div id="weekday">Monday</div>
+          <div id="full-date">July 20, 2026</div>
+        </div>
+      </header>
+
+      <div class="chalk-divider top-divider"></div>
+
+      <section class="board-grid">
+        <article class="tonight area">
+          <h2>Tonight</h2>
+          <div id="dinner-tonight" class="dinner-value">Loading dinner…</div>
+          <div class="tomorrow-line">
+            <span>Tomorrow</span>
+            <strong id="dinner-tomorrow">—</strong>
+          </div>
+        </article>
+
+        <article class="focus area">
+          <h2>Focus</h2>
+          <ul id="focus-list" class="chalk-list">
+            <li>Loading…</li>
+          </ul>
+        </article>
+
+        <article class="schedule area">
+          <h2>Schedule</h2>
+          <ul id="schedule-list" class="chalk-list schedule-list">
+            <li>Loading…</li>
+          </ul>
+        </article>
+
+        <article class="scripture area">
+          <h2>Scripture</h2>
+          <blockquote id="scripture-text">Loading today’s verse…</blockquote>
+          <div id="scripture-reference" class="scripture-ref"></div>
+        </article>
+
+        <article class="word area">
+          <div class="word-label">Word of the Year</div>
+          <div class="word-lockup">
+            <span id="word-year">2026</span>
+            <strong id="word-value">ESTABLISH</strong>
+          </div>
+        </article>
+
+        <article class="whiteboard area">
+          <h2 id="lower-title">Kitchen Whiteboard</h2>
+          <div id="lower-content" class="quote">Loading…</div>
+          <div id="lower-credit" class="quote-credit"></div>
+        </article>
+      </section>
+
+      <footer>
+        <img src="assets/tree-line.svg" class="tree-line" alt="">
+        <div class="footer-words">Nourish <span>•</span> Organize <span>•</span> Remember <span>•</span> Grow</div>
+        <div id="status" class="status" aria-live="polite"></div>
+      </footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
