@@ -3,87 +3,87 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#242424">
+  <meta name="theme-color" content="#202a25">
   <title>Daily Table</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wood-frame">
-    <section class="board">
-      <div class="tree-rings ring-one" aria-hidden="true"></div>
-      <div class="tree-rings ring-two" aria-hidden="true"></div>
+  <main class="frame">
+    <section class="chalkboard" aria-label="Daily Table family board">
+      <div class="chalk-haze haze-one"></div>
+      <div class="chalk-haze haze-two"></div>
+      <img class="tree-rings" src="assets/tree-rings.svg" alt="">
 
-      <header class="header">
-        <div class="brand-wrap">
-          <img class="hand brand" src="assets/daily_table.png" alt="Daily Table">
-          <div class="tree-line"></div>
+      <header class="masthead">
+        <div class="brand-block">
+          <h1>Daily Table</h1>
+          <div class="brand-underline" aria-hidden="true"></div>
+          <p id="greeting">Good Evening</p>
         </div>
-        <div class="welcome">
-          <img id="greetingImage" class="hand greeting" src="assets/good_morning.png" alt="Good Morning">
-          <div id="dateText" class="date">Loading today…</div>
+        <div class="date-block">
+          <div id="weekday">Monday</div>
+          <div id="full-date">July 20, 2026</div>
         </div>
       </header>
 
-      <section class="layout">
-        <article class="card dinner">
-          <img class="hand heading" src="assets/tonight.png" alt="Tonight">
-          <div id="weekendLunchWrap" class="weekend-lunch hidden">
-            <span class="eyebrow">Lunch</span>
-            <div id="weekendLunch" class="lunch-text"></div>
+      <div class="chalk-divider top-divider"></div>
+
+      <section class="board-grid">
+        <article class="tonight area">
+          <h2>Tonight</h2>
+          <div id="dinner-tonight" class="dinner-value">Loading dinner…</div>
+          <div class="tomorrow-line">
+            <span>Tomorrow</span>
+            <strong id="dinner-tomorrow">—</strong>
           </div>
-          <span class="eyebrow">Dinner</span>
-          <div id="dinnerText" class="dinner-text">Loading dinner…</div>
-          <div id="tomorrowDinner" class="tomorrow"></div>
         </article>
 
-        <article class="card schedule">
-          <img class="hand heading wide" src="assets/todays_schedule.png" alt="Today's Schedule">
-          <ul id="scheduleList" class="clean-list"></ul>
-          <p id="scheduleEmpty" class="blank-message hidden">Enjoy the margin today.</p>
+        <article class="focus area">
+          <h2>Focus</h2>
+          <ul id="focus-list" class="chalk-list">
+            <li>Loading…</li>
+          </ul>
         </article>
 
-        <article class="card focus">
-          <img class="hand heading wide" src="assets/todays_focus.png" alt="Today's Focus">
-          <ul id="focusList" class="clean-list checklist"></ul>
-          <p id="focusEmpty" class="blank-message hidden">Move gently today.</p>
+        <article class="schedule area">
+          <h2>Schedule</h2>
+          <ul id="schedule-list" class="chalk-list schedule-list">
+            <li>Loading…</li>
+          </ul>
         </article>
 
-        <article class="card scripture">
-          <img class="hand heading" src="assets/scripture.png" alt="Scripture">
-          <div id="scriptureReference" class="scripture-ref">Scripture for today</div>
-          <blockquote id="scriptureText">Loading…</blockquote>
+        <article class="scripture area">
+          <h2>Scripture</h2>
+          <blockquote id="scripture-text">Loading today’s verse…</blockquote>
+          <div id="scripture-reference" class="scripture-ref"></div>
         </article>
 
-        <article class="card word">
-          <div class="typed-heading">Word of the Year</div>
-          <div id="wordYear" class="word-year">2026</div>
-          <div id="wordText" class="word-text">Establish</div>
+        <article class="word area">
+          <div class="word-label">Word of the Year</div>
+          <div class="word-lockup">
+            <span id="word-year">2026</span>
+            <strong id="word-value">ESTABLISH</strong>
+          </div>
         </article>
 
-        <article id="reminderCard" class="card reminder">
-          <img class="hand heading wide" src="assets/gentle_reminder.png" alt="Gentle Reminder">
-          <div id="reminderText" class="reminder-text">Grace for this day.</div>
-        </article>
-
-        <article id="whiteboardCard" class="card whiteboard hidden">
-          <div class="typed-heading">Kitchen Whiteboard</div>
-          <blockquote id="pratherismText"></blockquote>
-          <div id="pratherismCredit" class="credit"></div>
-        </article>
-
-        <article id="sundayPrepCard" class="card sunday-prep hidden">
-          <div class="typed-heading">Sunday Lunch Prep</div>
-          <ul id="prepList" class="clean-list checklist"></ul>
-          <p id="prepEmpty" class="blank-message hidden">Future you will be glad you paused to prepare.</p>
+        <article class="whiteboard area">
+          <h2 id="lower-title">Kitchen Whiteboard</h2>
+          <div id="lower-content" class="quote">Loading…</div>
+          <div id="lower-credit" class="quote-credit"></div>
         </article>
       </section>
 
       <footer>
-        <span>Nourish • Organize • Remember • Grow</span>
-        <span>Ring 1</span>
+        <img src="assets/tree-line.svg" class="tree-line" alt="">
+        <div class="footer-words">Nourish <span>•</span> Organize <span>•</span> Remember <span>•</span> Grow</div>
+        <div id="status" class="status" aria-live="polite"></div>
       </footer>
     </section>
   </main>
+
   <script src="script.js"></script>
 </body>
 </html>
