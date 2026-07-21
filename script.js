@@ -4,103 +4,122 @@
   const SHEET_ID = "1Qg6BIwSfSVAz1_fU0mQImpfZYeSu8WnBC7pbzG8ku44";
   const REFRESH_MINUTES = 10;
 
-  const DEMO_DATA = {
+  const DEMO = {
     dashboard: {
-      "Greeting": "Good Evening",
-      "Dinner Tonight": "Fear Lime Chicken with Cilantro Rice & Avocado Salsa",
-      "Tomorrow's Dinner": "Taco Bowls",
-      "Focus 1": "Settle into the new rhythm",
-      "Focus 2": "Prep tomorrow before bed",
-      "Focus 3": "Leave room to breathe",
-      "Schedule 1": "6:30 • Dinner",
-      "Schedule 2": "7:30 • Unpack & reset",
-      "Schedule 3": "9:00 • Wind down",
-      "Scripture Reference": "Ephesians 3:17",
-      "Scripture Text": "May your roots grow down into God’s love and keep you strong.",
-      "Word of the Year": "Establish",
-      "Year": "2026",
-      "Gentle Reminder": "You do not have to finish everything today."
+      "Focus 1": "Stuff to attic",
+      "Focus 2": "Family Fun!",
+      "Focus 3": "Work Prep",
+      "Scripture Reference": "Psalm 46:10",
+      "Scripture Text": "Be still, and know that I am God.",
+      "Gentle Reminder": "A day is not wasted if a memory is made."
     },
-    menu: [],
-    pratherisms: [
-      { quote: "A day is not wasted if a memory is made.", who: "Darin", age: "" },
-      { quote: "Big head, big brain.", who: "Ethan", age: "" },
-      { quote: "I just fweaked out!", who: "Ethan", age: "4" }
-    ]
+    menu: [
+      { Day: "Monday", Dinner: "Carnitas Bowls" },
+      { Day: "Tuesday", Dinner: "Meatloaf & Baked Potatoes" }
+    ],
+    schedules: {
+      Lori: ["Isaiah House", "Lunch with Jen", "Work on lesson", "Kids practice", "Prayer time"],
+      Darin: ["Workout", "Work", "Lunch", "Pick up kids", "Men’s group"]
+    },
+    pratherisms: [{ quote: "A day is not wasted if a memory is made.", who: "Darin", age: "" }]
   };
 
-  const $ = (id) => document.getElementById(id);
-  const clean = (value) => (value == null ? "" : String(value).trim());
+  const $ = id => document.getElementById(id);
+  const clean = value => value == null ? "" : String(value).trim();
 
   function setDateAndGreeting() {
     const now = new Date();
     const hour = now.getHours();
-    const greeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
-    $("greeting").textContent = greeting;
+    $("greeting").innerHTML =
+      `${hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening"} <span class="heart">♡</span>`;
     $("weekday").textContent = now.toLocaleDateString(undefined, { weekday: "long" });
-    $("full-date").textContent = now.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+    $("full-date").textContent = now.toLocaleDateString(undefined, {
+      month: "long", day: "numeric", year: "numeric"
+    });
   }
 
-  function gvizUrl(sheetName) {
-    return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&_=${Date.now()}`;
+  function gvizUrl(sheet) {
+    return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheet)}&_=${Date.now()}`;
   }
 
-  async function fetchGviz(sheetName) {
-    const response = await fetch(gvizUrl(sheetName), { cache: "no-store" });
-    if (!response.ok) throw new Error(`${sheetName}: HTTP ${response.status}`);
+  async function fetchTable(sheet) {
+    const response = await fetch(gvizUrl(sheet), { cache: "no-store" });
+    if (!response.ok) throw new Error(`${sheet}: HTTP ${response.status}`);
     const text = await response.text();
     const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?\s*$/);
-    if (!match) throw new Error(`${sheetName}: unexpected response`);
-    const payload = JSON.parse(match[1]);
-    if (payload.status === "error") throw new Error(payload.errors?.[0]?.detailed_message || `${sheetName}: Google error`);
-    return payload.table;
+    if (!match) throw new Error(`${sheet}: unexpected Google response`);
+    const data = JSON.parse(match[1]);
+    if (data.status === "error") throw new Error(data.errors?.[0]?.detailed_message || `${sheet}: Google error`);
+    return data.table;
   }
 
-  function tableRows(table) {
-    return (table.rows || []).map(row => (row.c || []).map(cell => cell ? (cell.f ?? cell.v ?? "") : ""));
+  function rows(table) {
+    return (table.rows || []).map(row =>
+      (row.c || []).map(cell => cell ? (cell.f ?? cell.v ?? "") : "")
+    );
   }
 
   function dashboardMap(table) {
-    const out = {};
-    for (const row of tableRows(table)) {
+    const map = {};
+    rows(table).forEach(row => {
       const key = clean(row[0]);
-      if (key) out[key] = clean(row[1]);
-    }
-    return out;
-  }
-
-  function findHeaderIndex(rows, requiredWord) {
-    return rows.findIndex(row => row.some(cell => clean(cell).toLowerCase() === requiredWord.toLowerCase()));
+      if (key) map[key] = clean(row[1]);
+    });
+    return map;
   }
 
   function objectRows(table, requiredHeader) {
-    const rows = tableRows(table);
-    const headerIndex = findHeaderIndex(rows, requiredHeader);
+    const all = rows(table);
+    const headerIndex = all.findIndex(row =>
+      row.some(cell => clean(cell).toLowerCase() === requiredHeader.toLowerCase())
+    );
     if (headerIndex < 0) return [];
-    const headers = rows[headerIndex].map(h => clean(h));
-    return rows.slice(headerIndex + 1)
+    const headers = all[headerIndex].map(clean);
+    return all.slice(headerIndex + 1)
       .filter(row => row.some(cell => clean(cell)))
-      .map(row => Object.fromEntries(headers.map((h, i) => [h, clean(row[i])])));
+      .map(row => Object.fromEntries(headers.map((header, i) => [header, clean(row[i])])));
+  }
+
+  function scheduleColumns(table) {
+    const all = rows(table);
+    const headerIndex = all.findIndex(row =>
+      row.some(cell => ["lori", "darin"].includes(clean(cell).toLowerCase()))
+    );
+    if (headerIndex < 0) return { Lori: [], Darin: [] };
+
+    const headers = all[headerIndex].map(clean);
+    const loriIndex = headers.findIndex(h => h.toLowerCase() === "lori");
+    const darinIndex = headers.findIndex(h => h.toLowerCase() === "darin");
+    const result = { Lori: [], Darin: [] };
+
+    all.slice(headerIndex + 1).forEach(row => {
+      const lori = loriIndex >= 0 ? clean(row[loriIndex]) : "";
+      const darin = darinIndex >= 0 ? clean(row[darinIndex]) : "";
+      if (lori) result.Lori.push(lori);
+      if (darin) result.Darin.push(darin);
+    });
+    return result;
   }
 
   function valueByAliases(obj, aliases) {
     for (const alias of aliases) {
-      if (clean(obj[alias])) return clean(obj[alias]);
+      if (clean(obj?.[alias])) return clean(obj[alias]);
     }
     return "";
   }
 
-  function currentMenu(menuRows) {
+  function menuForToday(menuRows) {
     const now = new Date();
     const todayName = now.toLocaleDateString("en-US", { weekday: "long" });
     const tomorrowName = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
       .toLocaleDateString("en-US", { weekday: "long" });
-    const today = menuRows.find(r => clean(r.Day).toLowerCase() === todayName.toLowerCase()) || {};
-    const tomorrow = menuRows.find(r => clean(r.Day).toLowerCase() === tomorrowName.toLowerCase()) || {};
-    return { today, tomorrow };
+    return {
+      today: menuRows.find(r => clean(r.Day).toLowerCase() === todayName.toLowerCase()) || {},
+      tomorrow: menuRows.find(r => clean(r.Day).toLowerCase() === tomorrowName.toLowerCase()) || {}
+    };
   }
 
-  function nonEmptyValues(map, prefix, max = 8) {
+  function prefixedValues(map, prefix, max = 8) {
     const values = [];
     for (let i = 1; i <= max; i++) {
       const value = clean(map[`${prefix} ${i}`]);
@@ -110,65 +129,58 @@
   }
 
   function setList(id, values, fallback) {
-    const el = $(id);
-    el.innerHTML = "";
-    const items = values.length ? values : [fallback];
-    for (const text of items) {
+    const list = $(id);
+    list.innerHTML = "";
+    (values.length ? values : [fallback]).slice(0, 6).forEach(value => {
       const li = document.createElement("li");
-      li.textContent = text;
-      el.appendChild(li);
-    }
+      li.textContent = value;
+      list.appendChild(li);
+    });
   }
 
-  function fitDinner(text) {
-    const el = $("dinner-tonight");
+  function fitText(id, compactAt, tinyAt) {
+    const el = $(id);
     el.classList.remove("compact", "tiny");
-    const length = clean(text).length;
-    if (length > 58) el.classList.add("tiny");
-    else if (length > 34) el.classList.add("compact");
+    const length = clean(el.textContent).length;
+    if (tinyAt && length > tinyAt) el.classList.add("tiny");
+    else if (length > compactAt) el.classList.add("compact");
   }
 
   function render(data) {
     const dashboard = data.dashboard || {};
-    const menu = currentMenu(data.menu || []);
-    const todayDinner = valueByAliases(menu.today, ["Dinner", "Dinner Tonight", "Meal"]) ||
-      clean(dashboard["Dinner Tonight"]) || "Dinner is not planned yet";
-    const tomorrowDinner = valueByAliases(menu.tomorrow, ["Dinner", "Dinner Tonight", "Meal"]) ||
-      clean(dashboard["Tomorrow's Dinner"]) || clean(dashboard["Tomorrow Dinner"]) || "Not planned yet";
+    const menu = menuForToday(data.menu || []);
 
-    $("dinner-tonight").textContent = todayDinner;
-    $("dinner-tomorrow").textContent = tomorrowDinner;
-    fitDinner(todayDinner);
+    $("dinner-tonight").textContent =
+      valueByAliases(menu.today, ["Dinner", "Meal"]) ||
+      clean(dashboard["Dinner Tonight"]) ||
+      "Dinner is not planned yet";
 
-    setList("focus-list", nonEmptyValues(dashboard, "Focus", 5), "Choose one gentle priority");
-    setList("schedule-list", nonEmptyValues(dashboard, "Schedule", 6), "Nothing scheduled");
+    $("dinner-tomorrow").textContent =
+      valueByAliases(menu.tomorrow, ["Dinner", "Meal"]) ||
+      clean(dashboard["Tomorrow's Dinner"]) ||
+      "Not planned yet";
 
-    $("scripture-text").textContent = clean(dashboard["Scripture Text"]) || "Be still, and know that I am God.";
-    $("scripture-reference").textContent = clean(dashboard["Scripture Reference"]) || "Psalm 46:10";
+    fitText("dinner-tonight", 23, 43);
+    fitText("dinner-tomorrow", 26);
 
-    $("word-value").textContent = (clean(dashboard["Word of the Year"]) || "Establish").toUpperCase();
-    $("word-year").textContent = clean(dashboard["Year"]) || String(new Date().getFullYear());
+    setList("focus-list", prefixedValues(dashboard, "Focus", 5), "Choose one gentle priority");
+    setList("lori-list", data.schedules?.Lori || [], "Nothing listed");
+    setList("darin-list", data.schedules?.Darin || [], "Nothing listed");
 
-    renderLowerPanel(data, dashboard);
+    $("scripture-text").textContent =
+      clean(dashboard["Scripture Text"]) || "Be still, and know that I am God.";
+    $("scripture-reference").textContent =
+      clean(dashboard["Scripture Reference"]) || "Psalm 46:10";
+
+    renderWhiteboard(data, dashboard);
+    placePiggy();
   }
 
-  function renderLowerPanel(data, dashboard) {
-    const now = new Date();
-    const isSunday = now.getDay() === 0;
-    const lunchPrep = nonEmptyValues(dashboard, "Lunch Prep", 8);
-
-    if (isSunday && lunchPrep.length) {
-      $("lower-title").textContent = "Lunch Prep";
-      $("lower-content").classList.add("no-quotes");
-      $("lower-content").textContent = lunchPrep.join("  •  ");
-      $("lower-credit").textContent = "A gentle start for the week";
-      return;
-    }
-
+  function renderWhiteboard(data, dashboard) {
     const sayings = (data.pratherisms || []).filter(item => clean(item.quote));
     if (sayings.length) {
-      const dayKey = Math.floor(Date.now() / 86400000);
-      const saying = sayings[dayKey % sayings.length];
+      const dayNumber = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
+      const saying = sayings[dayNumber % sayings.length];
       $("lower-title").textContent = "Kitchen Whiteboard";
       $("lower-content").classList.remove("no-quotes");
       $("lower-content").textContent = saying.quote;
@@ -179,42 +191,65 @@
 
     $("lower-title").textContent = "Gentle Reminder";
     $("lower-content").classList.remove("no-quotes");
-    $("lower-content").textContent = clean(dashboard["Gentle Reminder"]) || "You have done enough for today.";
+    $("lower-content").textContent =
+      clean(dashboard["Gentle Reminder"]) || "You have done enough for today.";
     $("lower-credit").textContent = "";
   }
 
+  function dailySeed() {
+    const d = new Date();
+    return Number(`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`);
+  }
+
+  function placePiggy() {
+    const params = new URLSearchParams(location.search);
+    const forced = params.get("pig") === "1";
+    const seed = dailySeed();
+
+    // Piggy appears most days, but occasionally takes the day off.
+    const appears = forced || (seed % 7 !== 0 && seed % 11 !== 0);
+    const pig = $("piggy");
+    pig.className = "piggy";
+    if (!appears) return;
+
+    const spot = seed % 6;
+    pig.classList.add("show", `spot-${spot}`);
+  }
+
   async function loadData() {
-    const demo = new URLSearchParams(location.search).get("demo") === "1";
-    if (demo) {
-      render(DEMO_DATA);
+    const params = new URLSearchParams(location.search);
+    if (params.get("demo") === "1") {
+      render(DEMO);
       $("status").textContent = "Preview mode";
       return;
     }
 
     $("status").textContent = "Updating…";
     try {
-      const [dashboardTable, menuTable, pratherTable] = await Promise.all([
-        fetchGviz("Dashboard"),
-        fetchGviz("Weekly Menu"),
-        fetchGviz("Pratherisms")
+      const [dashboard, menu, schedules, pratherisms] = await Promise.all([
+        fetchTable("Dashboard"),
+        fetchTable("Weekly Menu"),
+        fetchTable("Schedules"),
+        fetchTable("Pratherisms")
       ]);
 
-      const data = {
-        dashboard: dashboardMap(dashboardTable),
-        menu: objectRows(menuTable, "Day"),
-        pratherisms: objectRows(pratherTable, "Quote").map(row => ({
+      render({
+        dashboard: dashboardMap(dashboard),
+        menu: objectRows(menu, "Day"),
+        schedules: scheduleColumns(schedules),
+        pratherisms: objectRows(pratherisms, "Quote").map(row => ({
           quote: valueByAliases(row, ["Quote", "Pratherism"]),
           who: valueByAliases(row, ["Who Said It", "Who", "Name"]),
           age: valueByAliases(row, ["Age"])
         }))
-      };
+      });
 
-      render(data);
-      $("status").textContent = `Updated ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
+      $("status").textContent =
+        `Updated ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
     } catch (error) {
       console.error(error);
-      render(DEMO_DATA);
-      $("status").textContent = "Preview shown • check Sheet sharing";
+      render(DEMO);
+      $("status").textContent = "Preview shown • add/share the Schedules tab";
     }
   }
 

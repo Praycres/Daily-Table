@@ -1,22 +1,35 @@
-# Daily Table — Ring 1.1
+# Daily Table — Ring 1.2
 
-Upload these items to the root of your GitHub repository:
+## Upload to GitHub
+Upload these items to the ROOT of the Daily-Table repository, replacing the older files:
 
 - index.html
 - style.css
 - script.js
-- assets/ (entire folder)
+- assets/ (the entire folder)
 
-The site reads from Google Sheet ID:
-1Qg6BIwSfSVAz1_fU0mQImpfZYeSu8WnBC7pbzG8ku44
+Do not upload the enclosing Daily-Table-Ring-1.2 folder.
 
-Required tab names:
-- Dashboard
-- Weekly Menu
-- Pratherisms
+## Google Sheet tabs required
+The site reads these exact tab names:
 
-To preview the design with sample content, add ?demo=1 to the website URL.
-Example:
-https://praycres.github.io/Daily-Table/?demo=1
+1. Dashboard
+2. Weekly Menu
+3. Schedules
+4. Pratherisms
 
-The board refreshes its Google Sheet data every 10 minutes.
+### Schedules tab
+Put `Lori` and `Darin` in the header row, then type one item per cell underneath each name.
+
+A time is optional and can simply be typed in the same cell:
+- Isaiah House
+- Lunch with Jen – 11:30
+- Pick up kids – 5:30
+
+The site displays up to six items for each person.
+
+## Preview helpers
+Add `?demo=1` to preview sample information.
+Add `?pig=1` to make Piggy appear during testing.
+
+The Google Sheet refreshes every 10 minutes.

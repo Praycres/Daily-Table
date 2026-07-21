@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#202a25">
+  <meta name="theme-color" content="#18231e">
   <title>Daily Table</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,79 +11,82 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="frame">
+  <main class="wood-frame">
     <section class="chalkboard" aria-label="Daily Table family board">
-      <div class="chalk-haze haze-one"></div>
-      <div class="chalk-haze haze-two"></div>
-      <img class="tree-rings" src="assets/tree-rings.svg" alt="">
+      <img class="rings rings-top" src="assets/tree-rings.svg" alt="">
+      <img class="rings rings-bottom" src="assets/tree-rings.svg" alt="">
 
       <header class="masthead">
-        <div class="brand-block">
+        <div class="brand">
           <h1>Daily Table</h1>
-          <div class="brand-underline" aria-hidden="true"></div>
-          <p id="greeting">Good Evening</p>
+          <div class="brand-stroke"></div>
+          <p id="greeting">Good Evening <span class="heart">♡</span></p>
         </div>
-        <div class="date-block">
-          <div id="weekday">Monday</div>
-          <div id="full-date">July 20, 2026</div>
+        <div class="date">
+          <strong id="weekday">Monday</strong>
+          <span id="full-date">July 20, 2026</span>
         </div>
       </header>
 
-      <div class="chalk-divider top-divider"></div>
+      <div class="horizontal-chalk"></div>
 
-      <section class="board-grid">
-        <article class="tonight area">
+      <section class="content-grid">
+        <article class="meal panel">
           <h2>Tonight</h2>
-          <div id="dinner-tonight" class="dinner-value">Loading dinner…</div>
-          <div class="tomorrow-line">
-            <span>Tomorrow</span>
-            <strong id="dinner-tomorrow">—</strong>
-          </div>
+          <div id="dinner-tonight" class="dinner">Loading…</div>
+          <div class="meal-dots"></div>
+          <h3>Tomorrow</h3>
+          <div id="dinner-tomorrow" class="tomorrow-meal">—</div>
         </article>
 
-        <article class="focus area">
+        <article class="focus panel">
           <h2>Focus</h2>
           <ul id="focus-list" class="chalk-list">
             <li>Loading…</li>
           </ul>
         </article>
 
-        <article class="schedule area">
-          <h2>Schedule</h2>
-          <ul id="schedule-list" class="chalk-list schedule-list">
+        <article class="person lori panel">
+          <div class="person-heading">
+            <h2>Lori</h2>
+            <img src="assets/flower.svg" class="name-icon flower" alt="">
+          </div>
+          <ul id="lori-list" class="chalk-list">
             <li>Loading…</li>
           </ul>
         </article>
 
-        <article class="scripture area">
+        <article class="person darin panel">
+          <div class="person-heading">
+            <h2>Darin</h2>
+            <img src="assets/tractor.svg" class="name-icon tractor" alt="">
+          </div>
+          <ul id="darin-list" class="chalk-list">
+            <li>Loading…</li>
+          </ul>
+        </article>
+
+        <article class="scripture panel">
           <h2>Scripture</h2>
           <blockquote id="scripture-text">Loading today’s verse…</blockquote>
-          <div id="scripture-reference" class="scripture-ref"></div>
+          <div id="scripture-reference" class="scripture-reference"></div>
         </article>
 
-        <article class="word area">
-          <div class="word-label">Word of the Year</div>
-          <div class="word-lockup">
-            <span id="word-year">2026</span>
-            <strong id="word-value">ESTABLISH</strong>
-          </div>
-        </article>
-
-        <article class="whiteboard area">
+        <article class="whiteboard panel">
           <h2 id="lower-title">Kitchen Whiteboard</h2>
           <div id="lower-content" class="quote">Loading…</div>
           <div id="lower-credit" class="quote-credit"></div>
         </article>
       </section>
 
+      <img id="piggy" class="piggy" src="assets/pig.svg" alt="A little chalk pig hiding on the board">
+
       <footer>
-        <img src="assets/tree-line.svg" class="tree-line" alt="">
         <div class="footer-words">Nourish <span>•</span> Organize <span>•</span> Remember <span>•</span> Grow</div>
         <div id="status" class="status" aria-live="polite"></div>
       </footer>
     </section>
   </main>
-
   <script src="script.js"></script>
 </body>
 </html>
