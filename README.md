@@ -1,35 +1,60 @@
-# Daily Table — Ring 1.2
+# Daily Table v2
 
-## Upload to GitHub
-Upload these items to the ROOT of the Daily-Table repository, replacing the older files:
+**Grow Deep. Gather Often. Celebrate Always.**
 
-- index.html
-- style.css
-- script.js
-- assets/ (the entire folder)
+A warm, family-centered digital chalkboard designed for the Prather home and an Echo Show 21.
 
-Do not upload the enclosing Daily-Table-Ring-1.2 folder.
+## Included
 
-## Google Sheet tabs required
-The site reads these exact tab names:
+- Deep green chalkboard and walnut frame
+- Soft oak tree rings and hand-drawn oak mark
+- Dusty-pink Lori flower
+- Warm tan Darin tractor
+- Whisper-peach Piggy
+- Today’s focus, scripture, and gentle reminder
+- Weekly dinner menu
+- Lori and Darin’s automatically filtered daily schedules
+- Family birthdays and anniversaries
+- Rotating Pratherisms
+- Last-good-data cache when Google Sheets is temporarily unavailable
 
-1. Dashboard
-2. Weekly Menu
-3. Schedules
-4. Pratherisms
+## Google Sheet
 
-### Schedules tab
-Put `Lori` and `Darin` in the header row, then type one item per cell underneath each name.
+The site is already configured for this Sheet ID:
 
-A time is optional and can simply be typed in the same cell:
-- Isaiah House
-- Lunch with Jen – 11:30
-- Pick up kids – 5:30
+`1pRMt9H74na_dlUEd4qZC4tPRNNEbMxC9HQWoKZdJxAs`
 
-The site displays up to six items for each person.
+Expected sheet tabs:
 
-## Preview helpers
-Add `?demo=1` to preview sample information.
-Add `?pig=1` to make Piggy appear during testing.
+- Dashboard
+- Weekly Menu
+- Schedules
+- Pratherisms
+- Family Dates
+- Settings
 
-The Google Sheet refreshes every 10 minutes.
+The Google Sheet must be shared so anyone with the link can view it.
+
+## Install on GitHub Pages
+
+1. Open the `Daily-Table` repository.
+2. Upload `index.html`, `style.css`, and `script.js` to the repository root, replacing the old versions.
+3. Commit the changes.
+4. Wait about 1–3 minutes.
+5. Refresh the live site.
+
+## Important schedule format
+
+| Day | Person | Time | Activity |
+|---|---|---|---|
+| Monday | Lori | 9:00 AM | Isaiah House |
+| Monday | Darin | | Work |
+
+## Piggy settings
+
+In the Settings tab, use one of:
+
+- Rare
+- Sometimes
+- Daily
+- Piggie Mania
